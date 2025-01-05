@@ -135,26 +135,6 @@ namespace JunimoServer.Services.CabinManager
             farmersInFarmhouse.RemoveWhere(farmerId => !farmersInFarmHouseCurrent.Contains(farmerId));
         }
 
-        private void OnFarmerEnteredFarmhouse(Farmer farmer)
-        {
-            // Player can enter his own farmhouse
-            if (farmer.UniqueMultiplayerID == Game1.player.UniqueMultiplayerID)
-            {
-                return;
-            }
-
-            Building farmersCabin = GetCabin(farmer);
-            string farmersCabinUniqueLocation = farmersCabin.indoors.Value.NameOrUniqueName;
-            Point farmersCabinEntrypoint = ((Cabin)farmersCabin.indoors.Value).getEntryLocation();
-
-            // TODO: Instead of porting to player cabin, should we prevent going inside?
-            // Pass player out because it fades the screen before warping
-            _helper.SendPrivateMessage(farmer.UniqueMultiplayerID, "Can't enter main building, porting to your own cabin");
-
-            Game1.server.sendMessage(farmer.UniqueMultiplayerID, Multiplayer.passout, Game1.player, new object[] {
-                farmersCabinUniqueLocation, farmersCabinEntrypoint.X, farmersCabinEntrypoint.Y, true
-            });
-        }
 
         private Building GetCabin(Farmer farmer)
         {
